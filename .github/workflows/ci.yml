@@ -1,23 +1,38 @@
-name: My Fourth CI/CD
+name: My First CI/CD
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  run-tests:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '22.17.0'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Run tests
       - name: Run tests
-        run: npm test
+        run: npm run test
+
+      # Step 5: Deploy to Netlify (only if tests pass)
+      - name: Deploy to Netlify
+        if: success()
+        run: |
+          npm install netlify-cli -g
+          netlify deploy --prod --dir=dist --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
