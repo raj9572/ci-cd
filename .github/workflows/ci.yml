@@ -1,11 +1,11 @@
-name: My Second CI/CD
+name: My Third CI/CD
 
 on:
   push:        # Run when we push code
     branches: [ main ]
 
 jobs:
-  run-js:
+  run-js-with-package:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,5 +16,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Run my greet script
-        run: node greet.js
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run greet script with chalk
+        run: node color-greet.js
