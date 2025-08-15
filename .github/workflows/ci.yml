@@ -1,15 +1,20 @@
-name: My First CI/CD
+name: My Second CI/CD
 
 on:
   push:        # Run when we push code
     branches: [ main ]
 
 jobs:
-  say-hello:
+  run-js:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Say Hello
-        run: echo "Hello CI/CD"
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run my greet script
+        run: node greet.js
